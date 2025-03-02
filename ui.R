@@ -56,6 +56,21 @@ ui <- dashboardPage(
 							plotlyOutput("expPlot_size_plga")
 						) # End column
 					), # End fluidRow
+					## ZETA PLOTS
+					fluidRow(
+						column(3,
+							plotlyOutput("expPlot_zeta_fr")
+						), # End column
+						column(3,
+							plotlyOutput("expPlot_zeta_pei")
+						), # End column
+						column(3,
+							plotlyOutput("expPlot_zeta_p188")
+						), # End column
+						column(3,
+							plotlyOutput("expPlot_zeta_plga")
+						) # End column
+					), # End fluidRow
 					## PdI PLOTS
 					fluidRow(
 						column(3,
@@ -74,7 +89,7 @@ ui <- dashboardPage(
 				), # End tabPanel
 				tabPanel("Database", icon=icon("database"),
 					h2("DoE Database"),
-					dataTableOutput("db") 
+					DT::DTOutput("db") 
 				) # End tabPanel
 			## SIZE PLOTS
 			) # End navbarPage
@@ -93,22 +108,32 @@ ui <- dashboardPage(
 								min=min(round(fmesh$pred_size)),
 								max=max(round(fmesh$pred_size)),
 								value=mean(fmesh$pred_size)
-							)#, # End sliderInput
-#							sliderInput("slider_zeta",
-#								"Desired zeta potential (mV)",
-#								min=min(round(fmesh$pred_zeta)),
-#								max=max(round(fmesh$pred_zeta)),
-#								value=mean(fmesh$pred_zeta)
-#							) # End sliderInput
+							), # End sliderInput
+							sliderInput("slider_zeta",
+								"Desired zeta potential (mV)",
+								min=min(round(fmesh$pred_zeta)),
+								max=max(round(fmesh$pred_zeta)),
+								value=mean(fmesh$pred_zeta)
+							) # End sliderInput
 						), # End column
 						column(3,
 							plotlyOutput("dashPlot_corr_size")
+						), # End column
+						column(3,
+							plotlyOutput("dashPlot_corr_zeta")
+						), # End column
+						column(3,
+							plotlyOutput("dashPlot_corr_pdi")
 						) # End column
-					) # End fluidRow
+					), # End fluidRow
+          fluidRow(
+					  DT::DTOutput("opt_form") 
+          ) # End fluidRow
 				), # End tabPanel	 
 				tabPanel("Model Heatmaps", icon=icon("map-location"),
 					h3("Heatmaps show the various values predicted by the models"),
-					fluidRow(
+          # Size
+          fluidRow(
 						column(3,
 							plotlyOutput("dashPlot_size_noP188_502h")
 						), # End column
@@ -120,9 +145,57 @@ ui <- dashboardPage(
 						), # End column
 						column(3,
 							plotlyOutput("dashPlot_size_P188_504h")
-						)
+						), # End column
+					), # End fluidRow
+          # Zeta
+					fluidRow(
+						column(3,
+							plotlyOutput("dashPlot_zeta_noP188_502h")
+						), # End column
+						column(3,
+							plotlyOutput("dashPlot_zeta_P188_502h")
+						), # End column
+						column(3,
+							plotlyOutput("dashPlot_zeta_noP188_504h")
+						), # End column
+						column(3,
+							plotlyOutput("dashPlot_zeta_P188_504h")
+						) # End column
+					), # End fluidRow
+          # PdI
+					fluidRow(
+						column(3,
+							plotlyOutput("dashPlot_pdi_noP188_502h")
+						), # End column
+						column(3,
+							plotlyOutput("dashPlot_pdi_P188_502h")
+						), # End column
+						column(3,
+							plotlyOutput("dashPlot_pdi_noP188_504h")
+						), # End column
+						column(3,
+							plotlyOutput("dashPlot_pdi_P188_504h")
+						) # End column
 					) # End fluidRow
-				) # End tabPanel
+				), # End tabPanel
+        tabPanel("Prediction Scatter Plots", icon=icon("chart-simple"),
+          fluidRow(
+            column(6, 
+              plotlyOutput("dashPlot_predExplorer1")
+            ), # End column
+            column(6, 
+              plotlyOutput("dashPlot_predExplorer2")
+            ) # End column
+          ), # End fluidRow
+          fluidRow(
+            column(6, 
+              plotlyOutput("dashPlot_predExplorer3")
+            ), # End column
+            column(6, 
+              plotlyOutput("dashPlot_predExplorer4")
+            ) # End column
+          ) # End fluidRow
+        ) # End tabPanel
 			) # End navbarPage
 		) # End DoE dashboard
 	) # End tabItems

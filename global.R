@@ -27,7 +27,7 @@ db <- df
 # Drop rows with NA
 df <- na.omit(df)
 df$plga_spec <- ifelse(df$plga_502 != 0, "PLGA 502H", "PLGA 504H")
-
+df$p188_spec <- ifelse(df$p188 == 0, "No Kolliphor P-188", "+ Kolliphor P-188")
 
 
 ## Summary data frames =====
@@ -103,6 +103,8 @@ fmesh$pei <- 50*fmesh$mod_pei+75
 fmesh$fr <- 0.5*fmesh$mod_fr+1
 fmesh$plga_spec <- ifelse(fmesh$mod_plga == 1, "PLGA 502H", "PLGA 504H")
 fmesh$p188 <- ifelse(fmesh$mod_p188 == 1, max(df$p188), min(df$p188))
+fmesh$p188_spec <- ifelse(fmesh$p188 == 0, "No Kolliphor P-188", 
+                          "+ Kolliphor P-188")
 
 ### Factorize real data for modeling ---------------------------------------------
 df$mod_pei <- 0.02*df$pei-1.5
@@ -245,3 +247,13 @@ fmesh$pred_zeta <- b0_zeta+b_pei_zeta*fmesh$mod_pei+
 				b_flow_sq_zeta*mesh$mod_fr^2
 fmesh$pred_zeta <- signif(fmesh$pred_zeta, digits=2)
 
+# Linear models on correlations ==============================================
+# Size
+lm_size <- summary(lm(df$size_nm ~ df$pred_size))
+rsq_size <- signif(lm_size$r.squared, digits=3)
+# PdI
+lm_pdi <- summary(lm(df$pdi ~ df$pred_pdi))
+rsq_pdi <- signif(lm_pdi$r.squared, digits=3)
+# Zeta
+lm_zeta <- summary(lm(df$zeta_pot ~ df$pred_zeta))
+rsq_zeta <- signif(lm_zeta$r.squared, digits=3)
